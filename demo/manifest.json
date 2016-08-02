@@ -1,0 +1,15 @@
+{
+  "main": "src/index.js",
+  "workers": 1,
+  "directory": "work",
+  "stdout": "log/out.log",
+  "stderr": "log/err.log",
+  "config": {
+    "port": 8080,
+    "view_engine": "ejs",
+    "views": "view"
+  },
+  "action": {
+    "reload": "src/index.js"
+  }
+}

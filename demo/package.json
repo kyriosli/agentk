@@ -1,0 +1,10 @@
+{
+  "description": "A demo project for AgentK",
+  "main": "index.js",
+  "scripts": {
+    "start": "ak start"
+  },
+  "dependencies": {
+    "ejs": "*"
+  }
+}

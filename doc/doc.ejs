@@ -1,0 +1,166 @@
+<!doctype html>
+<html>
+<head>
+    <title><%= title %> -- AgentK document generator</title>
+    <link rel="stylesheet" href="doc.css"/>
+</head>
+<body>
+<menu>
+    <% for(var _module of modules) { %>
+    <li>
+        <a href="<%= encodeURIComponent(_module) %>.html" title="<%= infos[_module].title %>"
+           class="<%= _module === name ? 'current' : '' %>"><%= _module %></a>
+    </li>
+    <% } %>
+</menu>
+<section>
+    <h1><%= title %></h1>
+    <% if(description){ %>
+    <article class="description"><%- description %></article>
+    <% } %>
+    <% if(examples) for(var example of examples) { %>
+    <fieldset class="example">
+        <legend>Example</legend>
+        <code><%- example %></code>
+    </fieldset>
+    <% } %>
+    <% if(constants.length){ %>
+    <h2>constants</h2>
+    <dl>
+        <% for (var local of constants) { %>
+        <dt class="<%= local.type %>"><%= local.exported %><sub class="type"><%- local.type %></sub></dt>
+        <dd>
+            <% if(local.description){ %>
+            <article><%- local.description %></article>
+            <% } %>
+            <% if(local.examples) for(var example of local.examples) { %>
+            <fieldset class="example">
+                <legend>Example</legend>
+                <code><%- example %></code>
+            </fieldset>
+            <% } %>
+        </dd>
+        <% } %>
+    </dl>
+    <% } %>
+    <% if(variables.length){ %>
+    <h2>variables</h2>
+    <dl>
+        <% for (var local of variables) { %>
+        <dt class="<%= local.type %>"><%= local.exported %><sub class="type"><%- local.type %></sub></dt>
+        <dd>
+            <% if(local.description){ %>
+            <article><%- local.description %></article>
+            <% } %>
+            <% if(local.examples) for(var example of local.examples) { %>
+            <fieldset class="example">
+                <legend>Example</legend>
+                <code><%- example %></code>
+            </fieldset>
+            <% } %>
+        </dd>
+        <% } %>
+    </dl>
+    <% } %>
+    <% if(functions.length){ %>
+    <h2>functions</h2>
+    <dl>
+        <% for (var exported of functions) {
+            var local = decls[exports[exported]]; %>
+        <dt class="function" id="<%- exported %>"><sub class="pre">func</sub>
+            <%= exported %><sub><%= local.proto %></sub></dt>
+        <dd>
+            <% if(local.description){ %>
+            <article><%- local.description %></article>
+            <% } %>
+            <% if(local.examples) for(var example of local.examples) { %>
+            <fieldset class="example">
+                <legend>Example</legend>
+                <code><%- example %></code>
+            </fieldset>
+            <% } %>
+            <% if(local.comment && local.comment.param){ %>
+            <h3>parameters</h3>
+            <% for(var param of local.comment.param) { %>
+            <h4><%= param.name %>
+                <% if(param.type){ %>
+                <sub>:<%- param.type %></sub>
+                <% } if(param.optional) { %>
+                <sub>optional</sub>
+                <% } %>
+            </h4>
+            <article><%- param.description %></article>
+            <% } %>
+            <% } /* end if(local.comment.param) */ %>
+            <% if(local.comment && local.comment.returns) { %>
+            <h3>returns</h3>
+            <% if(local.comment.returns.type){ %>
+            <h4><sub><%- local.comment.returns.type %></sub></h4>
+            <% } %>
+            <article><%- local.comment.returns.description %></article>
+            <% } %>
+        </dd>
+        <% } %>
+    </dl>
+    <% } %>
+
+    <% if(classes.length){ %>
+    <h2>classes</h2>
+    <dl>
+        <% for (var exported of classes) {
+            var local = decls[exports[exported]]; %>
+        <dt class="function" id="class-<%= exported %>"><sub class="pre">class</sub>
+            <%= exported %>
+            <% if (local.superClass) { %>
+            <sub class="extends">: <%= local.superClass %></sub>
+            <% } %>
+        </dt>
+        <dd>
+            <% if(local.description){ %>
+            <article><%- local.description %></article>
+            <% } %>
+            <% if(local.examples) for(var example of local.examples) { %>
+            <fieldset class="example">
+                <legend>Example</legend>
+                <code><%- example %></code>
+            </fieldset>
+            <% } %>
+            <% if(local.methods) for(var method of local.methods) { %>
+        </dd>
+        <dt>
+            <% if(method.kind === 'get' || method.kind === 'set') { %>
+            <sub class="pre"><%- method.kind %></sub>
+            <% } else if(method.static){ %>
+            <sub class="pre">static</sub>
+            <% } %>
+            <%= exported %>::<%= method.key.name %></dt>
+        <dd>
+            <% if(method.description) { %>
+            <article><%- method.description %></article>
+            <% } /* end if(method.description) */ %>
+            <% if(method.examples) for(var example of method.examples) { %>
+            <fieldset class="example">
+                <legend>Example</legend>
+                <code><%- example %></code>
+            </fieldset>
+            <% } %>
+            <% if(method.comment && method.comment.param) { %>
+            <h3>parameters</h3>
+            <% for(var param of method.comment.param) { %>
+            <h4><%= param.name %> <sub>:<%- param.type %></sub></h4>
+            <article><%- param.description %></article>
+            <% } %>
+            <% } /* end if(local.comment.param) */ %>
+            <% if(method.comment && method.comment.returns) { %>
+            <h3>returns <sub class="type"><%- method.comment.returns.type %></sub></h3>
+            <article> <%- method.comment.returns.description %></article>
+            <% } %>
+            <% } /* end for-of(local.methods) */ %>
+        </dd>
+        <% } %>
+    </dl>
+    <% } %>
+
+</section>
+</body>
+</html>

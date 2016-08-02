@@ -1,0 +1,49 @@
+<!doctype html>
+<html>
+<head>
+    <title><%= title %></title>
+    <style>
+        body {
+            background: #EEE;
+            font-size: 12px;
+            font-family: Tahoma, 'sans-serif';
+        }
+
+        code, pre {
+            padding: 4px;
+            background: #FFF;
+            font-family: Monaco, consolas, Monospace, sans-serif;
+            box-shadow: 0 0 1px #DDD;
+        }
+
+        .err {
+            color: #800;
+        }
+    </style>
+</head>
+<body>
+<h1><%= message %></h1>
+
+<h2>This is a demo page for AgentK. </h2>
+
+<p>If you have seen this page, then you can start to write your own project now!</p>
+
+<p>Hint: don't know what to do? Follow the tutorial to learn how to write a project.</p>
+
+<h3>Step 1. add static file handler.</h3>
+
+<p>copy the following code into <code>src/route.js</code>, right after the <code>// TODO: add more url rules</code>
+    line:</p>
+
+<pre>route.prefix('/static/', function (req) {
+    return Response.file('static' + req.pathname);
+});
+</pre>
+
+<p>After that, restart your project and refresh this page.</p>
+
+
+<script src="/static/index.js"
+        onerror="document.write('<p id=error1 class=err>Oops, the static file could not be loaded</p>')"></script>
+</body>
+</html>

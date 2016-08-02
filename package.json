@@ -1,0 +1,39 @@
+{
+  "name": "agentk",
+  "version": "1.6.0",
+  "description": "synchronous web service framework",
+  "main": "index.js",
+  "bin": {
+    "ak": "bin/agentk.js"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "fibers": "1.0.13"
+  },
+  "scripts": {
+    "test": "ak test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kyriosli/agentk.git"
+  },
+  "keywords": [
+    "fiber",
+    "async",
+    "sync",
+    "framework"
+  ],
+  "engines": {
+    "node": ">=0.12.2"
+  },
+  "author": {
+    "name": "kyrios"
+  },
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kyriosli/agentk/issues"
+  },
+  "homepage": "https://github.com/kyriosli/agentk"
+}

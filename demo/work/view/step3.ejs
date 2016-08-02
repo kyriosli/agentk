@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+<head>
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/static/index.css">
+</head>
+<body>
+
+<h2>Hello, dear <%= query.name || "... " %></h2>
+
+<% if(!query.name) { %>
+<p>What? Don't you even have a name? Hmmm... Let me call you... <code>
+        <%= query.name = ['Sun', 'Mon', 'Tues', 'Wednes', 'Thurs', 'Fri', 'Sat'][new Date().getDay()] + 'day' %>
+    </code>.</p>
+<script>history.replaceState(null, null, '?name=<%= query.name %>')</script>
+<% } %>
+
+<p>Now I have your name, but I'll too forgetful to remember it. Why don't you write down your name into cookies?</p>
+
+<h3>Step 4. write name to cookies</h3>
+
+<p>Open <code>src/route.js</code> again, add a new rule <b>BEFORE</b> the match rule you have just added:</p>
+
+<pre>route.exact('/step3', step3);</pre>
+
+<p>But variable <code>step3</code> is not defined yet, let's define it in another file. Create a new file in the <code>src</code>
+    directory named <code>step3.js</code>, paste the following code into it:
+</p>
+
+<pre>import {Response, parseQuery} from 'module/http.js';
+
+export default function (req) {
+    let body = co.yield(req.text());
+
+    let form = parseQuery(body);
+
+    let resp = Response.redirect('/step4');
+    resp.setCookie('name', form.name, {
+        path: '/',
+        expires: new Date('2099-12-31').toGMTString()
+    });
+    return resp;
+}</pre>
+
+<p>Then we can import it into routes. Paste the following line into <code>src/route.js</code> after the imports:</p>
+
+<pre>import step3 from 'step3.js';</pre>
+
+<p>Then restart the program an refresh this page!</p>
+
+</body>
+</html>

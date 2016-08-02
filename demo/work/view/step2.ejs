@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+<head>
+    <title><%= title %> -- <%= new Date(+query.time) %></title>
+    <link rel="stylesheet" href="/static/index.css">
+</head>
+<body>
+
+<h2>Good Job!</h2>
+
+<p>As You can see, url path parameters can be passed into handler with <code>router.match</code> as match groups.</p>
+
+<h3>Step 3. edit template file</h3>
+
+<p>Well, it seems you have mastered how to add a route rule, now let's try to edit a template file.</p>
+
+<p>Now Open <code>work/view/step2.ejs</code>, find the <code>&lt;form&gt;</code> element and make it visible</p>
+
+<p>You do not need to restart the project after editing the template file</p>
+<!-- Hint: set display to "block" will do. -->
+<form style="display: none;" action="/step3" method="POST">
+    <p>OK... Not let's see what we can do with this form.</p>
+
+    <p><label><input type="text" placeholder="your name..." size="12" name="name"></label></p>
+
+    <p>
+        <button>submit</button>
+    </p>
+</form>
+
+</body>
+</html>

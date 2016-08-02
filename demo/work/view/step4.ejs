@@ -1,0 +1,82 @@
+<!doctype html>
+<html>
+<head>
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/static/index.css">
+</head>
+<body>
+
+<h2>Good Job!</h2>
+
+<p>I can't believe it that you have gone so far, dear
+    <script>(function () {
+            var m = document.cookie.match(/\bname=([^;]+)/);
+            if (m) {
+                document.write(m[1]);
+            } else {
+                document.write('... sorry, what\'s your name again? How did you get in here?')
+            }
+        })()
+    </script>
+</p>
+
+<p>Now let's try to get to know each other deeper</p>
+
+<h3>Step 5. </h3>
+
+<p>When the button is pressed, I'll ask a question and you should give me the answer. The question is sent to the server
+    as a request payload. The server will receive a http request like:</p>
+
+<pre>PUT /step3 HTTP/1.1
+Host: localhost
+Content-Type: text/plain
+Content-Length: 3
+
+1+2</pre>
+
+<p>And it should respond with a json: <code>{"result":3}</code></p>
+
+<p>
+    <button id="try">Try it out!</button>
+</p>
+
+<p>Hint: paste the code below into <code>src/step3.js</code> after body has been retrived:</p>
+
+<pre>    if (req.method === 'PUT') {
+        let question = body.toString(),
+            answer = eval(question);
+        return Response.json({result: answer});
+    }</pre>
+
+<script>
+    document.getElementById('try').addEventListener('click', function () {
+        var x = Math.random() * 100 | 0, y = Math.random() * 100 | 0, answer = x + y;
+        var xhr = new XMLHttpRequest();
+        xhr.open('PUT', '/step3');
+        xhr.onerror = function () {
+            append('Oops, there was an error.')
+        };
+        xhr.onload = function () {
+            if (xhr.status !== 200 || xhr.getResponseHeader('Content-Type') !== 'application/json') {
+                return append('Oops, bad response')
+            }
+            var result;
+            try {
+                result = JSON.parse(xhr.responseText);
+            } catch (e) {
+                return append('Oops, bad response');
+            }
+            if (result.result !== answer) {
+                return append('Oops, bad answer');
+            }
+            append('Right! The answer is ' + answer + '! you have passed the test. <a href="/step5">continue</a>');
+        }
+        append('Question: what\'s ' + x + ' + ' + y + ' ?');
+        xhr.send(x + '+' + y);
+    });
+    function append(str) {
+        document.body.insertAdjacentHTML('beforeEnd', '<p>' + str + '</p>');
+    }
+</script>
+</body>
+</html>
