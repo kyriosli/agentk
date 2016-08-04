@@ -139,8 +139,7 @@ function onStmt(stmt) {
                 appendEnd('}', stmt);
                 return;
             case "BreakStatement":
-            case "ContinueStatement":
-            {
+            case "ContinueStatement": {
                 let str = stmt.type === "BreakStatement" ? 'break' : 'continue';
                 if (stmt.label) {
                     str += ' ' + stmt.label.name + ';'
@@ -314,8 +313,7 @@ function onExpr(expr, isStmt) {
                 break;
             }
         case "BinaryExpression":
-        case "LogicalExpression":
-        {
+        case "LogicalExpression": {
             const lvl = level(expr);
             autoWrap(expr.left, lvl, isStmt);
             append(' ' + expr.operator + ' ');
@@ -378,8 +376,7 @@ function onExpr(expr, isStmt) {
             }
             appendEnd(isStmt ? '})' : '}', expr);
             break;
-        case "NewExpression":
-        {
+        case "NewExpression": {
             appendStart('new ', expr);
 
             let curr = expr.callee, wrapCallee = false;
@@ -407,8 +404,7 @@ function onExpr(expr, isStmt) {
             onExpr(expr.argument);
             break;
         case "ArrayExpression":
-        case "ArrayPattern":
-        {
+        case "ArrayPattern": {
             appendStart('[', expr);
             onExprs(expr.elements);
             append(']');
@@ -420,8 +416,7 @@ function onExpr(expr, isStmt) {
         case "SequenceExpression":
             onExprs(expr.expressions, isStmt);
             break;
-        case "YieldExpression":
-        {
+        case "YieldExpression": {
             const requiresWrap = level(expr.argument) > 14;
             appendStart((expr.delegate ? 'yield* ' : 'yield ') + (requiresWrap ? '(' : ''), expr);
             onExpr(expr.argument);
@@ -431,8 +426,7 @@ function onExpr(expr, isStmt) {
         case "Super":
             append('super', expr);
             break;
-        case "TemplateLiteral":
-        {
+        case "TemplateLiteral": {
             appendStart('`', expr);
             const exprs = expr.expressions,
                 quasis = expr.quasis,
@@ -456,7 +450,7 @@ function onExprs(arr, isStmt) {
     for (let i = 0, L = arr.length; i < L; i++) {
         let expr = arr[i];
         if (!expr) {
-            append(', ');
+            i && append(', ');
             continue
         }
         let isSeq = level(expr) === 15;
