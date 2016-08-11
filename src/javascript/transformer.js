@@ -477,7 +477,7 @@ handlers.UnaryExpression
 
 
 function iterate(arr) {
-    for (let i = arr.length; i; i--) {
+    for (var i = arr.length; i; i--) {
         handle(arr.length - i, arr)
     }
 }
