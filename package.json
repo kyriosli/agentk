@@ -1,6 +1,6 @@
 {
   "name": "agentk",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "synchronous web service framework",
   "main": "index.js",
   "bin": {
