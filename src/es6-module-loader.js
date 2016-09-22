@@ -2,10 +2,9 @@
 "use strict";
 
 const parseOptions = {
-    ecmaVersion: 7,
+    ecmaVersion: 8,
     sourceType: 'module',
     locations: true,
-    plugins: {asyncawait: true},
     loc: true
 }, transformOptions = require('./javascript/transform_options'), buildOptions = {
     loc: true
@@ -15,7 +14,6 @@ const path = require('path'), fs = require('fs'), vm = require('vm');
 
 
 const acorn = require('./javascript/acorn'), parse = acorn.parse;
-require('./javascript/acorn-es7-plugin')(acorn);
 
 const build = require('./javascript/builder');
 const transform = require('./javascript/transformer');
