@@ -144,3 +144,7 @@ function runIterator(iterator) {
         }
     });
 }
+
+Promise.prototype.yield = function () {
+    return Fiber.yield(this)
+};
