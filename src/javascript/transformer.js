@@ -41,9 +41,7 @@ const handler = handle.bind.bind(handle, null);
 
 const handlers = {
     ImportDeclaration: function (stmt, idx, arr) {
-        const $include = call(id('co.yield'), [
-            call(id('includeAsync'), [raw(JSON.stringify(_path.resolve(current_dirname, stmt.source.value)))])
-        ]);
+        const $include = call(member(call(id('includeAsync'), [raw(JSON.stringify(_path.resolve(current_dirname, stmt.source.value)))]), 'yield'), []);
         if (!stmt.specifiers.length) { // import only
             arr[idx] = expr(call(member({
                 type: "MemberExpression",

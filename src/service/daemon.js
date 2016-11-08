@@ -322,7 +322,7 @@ function onMessage(msg) {
         if (msg.action === 'setup') { // setup module
             let module = msg.module;
             if (module in modules) return;
-            let method = co.yield(include('../module/' + module, __dirname)).onMessage;
+            let method = include('../module/' + module, __dirname).yield().onMessage;
             if (typeof method === 'function') modules[module] = method;
             return;
         }

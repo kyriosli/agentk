@@ -1,5 +1,5 @@
 #!/bin/sh
-":" // ; exec /usr/bin/env node $(if [ "`/usr/bin/env node -v`" \< "v5" ]; then echo --harmony; fi) "$0" "$@"
+":" // ; exec /usr/bin/env node $(if [ "`/usr/bin/env node -v`" \< "v5" ]; then echo --harmony; fi) $NODE_OPTS "$0" "$@"
 "use strict";
 
 let exec = 'ak';
@@ -15,9 +15,7 @@ if (process.env.SU) {
     delete process.env.SU
 }
 
-const cp = require('child_process'),
-    fs = require('fs'),
-    path = require('path');
+const fs = require('fs'), path = require('path');
 
 const win32 = process.platform === 'win32';
 
@@ -206,7 +204,7 @@ let commands = {
             let co = require('../src/co.js'),
                 load = require('../index.js').load;
             co.run(function () {
-                let module = co.yield(load(path.join(__dirname, '../src/module/doc.js')));
+                let module = load(path.join(__dirname, '../src/module/doc.js')).yield();
                 module.doc(outDir, properties.format || 'md');
             }).done();
         }
@@ -489,7 +487,7 @@ function loadAndRun(modulePath, cb) {
     let co = require('../src/co.js'),
         load = require('../index.js').load;
     return co.run(function () {
-        return cb(co.yield(load(path.join(__dirname, modulePath))), co);
+        return cb(load(path.join(__dirname, modulePath)).yield(), co);
     });
 }
 

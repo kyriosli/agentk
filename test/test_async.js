@@ -20,7 +20,7 @@ test.test('await', function () {
         }), 1234)
     }
 
-    co.yield(test());
+    test().yield();
 });
 
 test.test('arguments', function () {
@@ -28,26 +28,26 @@ test.test('arguments', function () {
         return await add(foo, 30)
     }
 
-    assertEqual(co.yield(foo(12)), 42);
+    assertEqual(foo(12).yield(), 42);
 
     async function foo2(...foo) {
         return await add(foo[0], foo[1])
     }
 
-    assertEqual(co.yield(foo2(12, 30)), 42);
+    assertEqual(foo2(12, 30).yield(), 42);
     async function foo3(foo, bar = 30) {
         return await add(foo, bar)
     }
 
-    assertEqual(co.yield(foo3(12)), 42);
-    assertEqual(co.yield(foo3(12, 31)), 43);
+    assertEqual(foo3(12).yield(), 42);
+    assertEqual(foo3(12, 31).yield(), 43);
 });
 
 
 import * as math from 'module/math'
 
 test.test('exported', function () {
-    assertEqual(co.yield(math.async_abs(-10)), 10)
+    assertEqual(math.async_abs(-10).yield(), 10)
 });
 
 function add(a, b) {

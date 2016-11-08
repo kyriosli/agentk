@@ -360,12 +360,12 @@ function callService(name, data) {
     if (data) {
         headers.data = JSON.stringify(data)
     }
-    let resp = co.yield(http.fetch(`unix://${win32 ? '//./pipe/ak_daemon' : listen_path}?${name}`, {
+    let resp = http.fetch(`unix://${win32 ? '//./pipe/ak_daemon' : listen_path}?${name}`, {
         method: 'GET',
         headers: headers
-    }));
+    }).yield();
 
-    return {code: resp.status, msg: co.yield(resp.text())}
+    return {code: resp.status, msg: resp.text().yield()}
 }
 
 function tryCallService(name, data) {

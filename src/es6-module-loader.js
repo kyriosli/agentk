@@ -98,7 +98,7 @@ function ensureParentDir(name) {
 const defaultProp = {
     configurable: true,
     get: function () {
-        return co.yield(this[loadProgress])[moduleDefault];
+        return this[loadProgress].yield()[moduleDefault];
     }
 };
 
@@ -109,9 +109,9 @@ function initModule(module, option) {
         props[name] = {
             configurable: true,
             get: function () {
-                return co.yield(this[loadProgress])[name];
+                return this[loadProgress].yield()[name];
             }, set: function (val) {
-                co.yield(this[loadProgress])[name] = val;
+                this[loadProgress].yield()[name] = val;
             }
         }
     });
@@ -173,7 +173,7 @@ function defineModule(module, buffer, option) {
         ctor(module, co, function (path) {
             return _load(path, option)
         }, function _import(name) {
-            return co.yield(includeAsync(path.resolve(__dirname, name)))
+            return includeAsync(path.resolve(__dirname, name)).yield()
         }, includeAsync, __filename, __dirname, moduleDefault, loadProgress);
         return module;
     });
