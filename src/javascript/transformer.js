@@ -383,6 +383,10 @@ const handlers = {
                 seqs.push(init);
                 parent.type = "SequenceExpression";
                 parent.expressions = seqs;
+            } else {
+                walkDestruct(expr, null, function (value) {
+                    handlers[value.type](value)
+                })
             }
             return;
         }

@@ -299,7 +299,7 @@ function onExpr(expr, isStmt) {
             }
             break;
         case "AssignmentPattern":
-            onIdentifier(expr.left);
+            onExpr(expr.left);
             append(' = ');
             autoWrap(expr.right, 13);
             break;

@@ -304,7 +304,7 @@ setTimeout(function () {
     assertEqual(_test, test);
 
     // 解构赋值修改引入变量
-    ({abc: _y}) = _test;
+    ({abc: _y} = _test);
     assertEqual(y, test.abc)
 });
 
@@ -314,7 +314,7 @@ assertEqual(w, 7);
 
 // 测试解构赋值
 let abc, xyz;
-({abc, xyz = 22}) = test;
+({abc, xyz = 22} = test);
 assertEqual(abc, 48);
 assertEqual(xyz, 22);
 assert.deepEqual([abc] = ['abc'], ['abc']);
