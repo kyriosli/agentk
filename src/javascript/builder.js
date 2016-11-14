@@ -2,7 +2,7 @@
 
 const newlines = '\n'.repeat(128), whitespaces = ' '.repeat(128);
 
-let line = 1, column = 0, buf = '', toIndent = null;
+var line = 1, column = 0, buf = '', toIndent = null;
 const inspect = require('util').inspect;
 
 
@@ -16,7 +16,7 @@ function returns() {
 }
 
 const $appendBefore = appendBefore, $appendStart = appendStart, $appendEnd = appendEnd;
-let useLoc = true;
+var useLoc = true;
 
 module.exports = function (ast, option) {
     //console.log('building', ast);
@@ -140,7 +140,7 @@ function onStmt(stmt) {
                 return;
             case "BreakStatement":
             case "ContinueStatement": {
-                let str = stmt.type === "BreakStatement" ? 'break' : 'continue';
+                var str = stmt.type === "BreakStatement" ? 'break' : 'continue';
                 if (stmt.label) {
                     str += ' ' + stmt.label.name + ';'
                 } else {
@@ -179,7 +179,7 @@ function onClass(node) {
 }
 
 function onMethod(method) {
-    let prefix = '';
+    var prefix = '';
     if (method.static) prefix = 'static ';
 
     if (method.kind.length === 3) prefix += method.kind + ' '; // get|set
@@ -362,7 +362,7 @@ function onExpr(expr, isStmt) {
             }
             for (var i = 0, L = expr.properties.length; i < L; i++) {
                 i && append(',');
-                let prop = expr.properties[i];
+                var prop = expr.properties[i];
                 if (prop.computed) append('[');
                 onExpr(prop.key); // identifier or literal
                 if (prop.computed) append(']');
@@ -379,7 +379,7 @@ function onExpr(expr, isStmt) {
         case "NewExpression": {
             appendStart('new ', expr);
 
-            let curr = expr.callee, wrapCallee = false;
+            var curr = expr.callee, wrapCallee = false;
             for (; ;) {
                 if (curr.type === "CallExpression" || level(curr) > 0) {
                     wrapCallee = true;
@@ -448,12 +448,12 @@ function onExpr(expr, isStmt) {
 function onExprs(arr, isStmt) {
     if (!arr.length) return;
     for (var i = 0, L = arr.length; i < L; i++) {
-        let expr = arr[i];
+        var expr = arr[i];
         if (!expr) {
             i && append(', ');
             continue
         }
-        let isSeq = level(expr) === 15;
+        var isSeq = level(expr) === 15;
         append(isSeq ? i ? ', (' : '(' : i ? ', ' : '');
         onExpr(arr[i], isStmt && i === 0);
         isSeq && append(')');
@@ -465,7 +465,7 @@ function onFunction(expr, isShorthand) {
     const isArrow = expr.type === "ArrowFunctionExpression";
     appendStart(isArrow || isShorthand ? '' : expr.generator ? 'function* ' : 'function ', expr);
     expr.id && onIdentifier(expr.id);
-    let L = expr.params.length;
+    var L = expr.params.length;
     append('(');
     const hasRest = L && expr.params[L - 1].type === "RestElement";
     if (hasRest) L--;
@@ -489,7 +489,7 @@ function onFunction(expr, isShorthand) {
             expr.body.body.forEach(onStmt);
             appendEnd('}', expr.body);
         } else {
-            let prefix = ') => ';
+            var prefix = ') => ';
             const isObject = expr.body.type === "ObjectExpression";
             if (isObject) prefix += '(';
 
@@ -505,7 +505,7 @@ function onFunction(expr, isShorthand) {
 }
 
 function appendBefore(str, node, i) {
-    let loc = node.loc && node.loc.start;
+    var loc = node.loc && node.loc.start;
     if (loc) {
         if (loc.column >= i)loc.column -= i;
         autoAppend(str, loc);
@@ -515,7 +515,7 @@ function appendBefore(str, node, i) {
 }
 
 function appendStart(str, node) {
-    let loc = node.loc && node.loc.start;
+    var loc = node.loc && node.loc.start;
     if (loc) {
         autoAppend(str, loc);
     } else {
@@ -524,7 +524,7 @@ function appendStart(str, node) {
 }
 
 function appendEnd(str, node) {
-    let loc = node.loc && node.loc.end;
+    var loc = node.loc && node.loc.end;
     if (loc) {
         if (loc.column >= str.length) loc.column -= str.length;
         autoAppend(str, loc);

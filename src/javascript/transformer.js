@@ -1,8 +1,8 @@
 "use strict";
 const _path = require('path');
 
-let handle_string_template, handle_class, handle_destruct, handle_function_default_param, handle_function_rest_param;
-let current_dirname;
+var handle_string_template, handle_class, handle_destruct, handle_function_default_param, handle_function_rest_param;
+var current_dirname;
 
 const params = ['module', 'co', 'require', 'include', 'includeAsync', '__filename', '__dirname', 'moduleDefault', 'loadProgress'].map(id),
     useStrict = expr(raw('"use strict"')),
@@ -19,7 +19,7 @@ const params = ['module', 'co', 'require', 'include', 'includeAsync', '__filenam
     $moduleDefault = id('moduleDefault');
 
 
-let context = {onIdentifier: Boolean};
+var context = {onIdentifier: Boolean};
 
 function transform(ast, options) {
     handle_string_template = options.StringTemplate;
@@ -89,7 +89,7 @@ const handlers = {
         }
     },
     ExportNamedDeclaration: function (stmt, idx, arr) {
-        if (stmt.declaration) { // export let ...
+        if (stmt.declaration) { // export var ...
             const ctx = context.beginExport();
             handle('declaration', stmt);
             arr[idx] = stmt.declaration;
@@ -104,7 +104,7 @@ const handlers = {
         if ((decl.type === "ClassDeclaration" || decl.type === "FunctionDeclaration") && !decl.id) {
             decl.type = decl.type === "FunctionDeclaration" ? "FunctionExpression" : "ClassExpression";
         }
-        let init;
+        var init;
         switch (decl.type) {
             case "ClassDeclaration":
             case "FunctionDeclaration":
@@ -133,8 +133,8 @@ const handlers = {
             if (id.type === "Identifier") {
                 context.addVariable(id, stmt);
             } else if (handle_destruct) {
-                // let {x} = init
-                let init;
+                // var {x} = init
+                var init;
                 if (decl.init.type === "Identifier") {
                     init = decl.init;
                     decls.splice(i--, 1); // delete the declaration
@@ -168,7 +168,7 @@ const handlers = {
         const ctx = makeContext();
         const left = stmt.left;
         const extra_decls = [];
-        if (left.type === "VariableDeclaration") { // for(let x of ...)
+        if (left.type === "VariableDeclaration") { // for(var x of ...)
             const id = left.declarations[0].id;
             if (id.type === "Identifier") {
                 context.addVariable(id, left)
@@ -290,7 +290,7 @@ const handlers = {
     MethodDefinition: function (method, i, arr) {
         handleFunction(method.value);
         if (!handle_class) return;
-        let target = method.static ? arr.$className.name : 'proto';
+        var target = method.static ? arr.$className.name : 'proto';
         if (method.kind.length === 3) { // get|set
             arr[i] = expr(call(member({
                 type: "Identifier",
@@ -366,7 +366,7 @@ const handlers = {
         if (key === 'left' && parent.type === "AssignmentExpression") {
             if (handle_destruct) {
                 const seqs = [];
-                let init = parent.right;
+                var init = parent.right;
                 if (init.type !== "Identifier") {
                     context.addTemp($destruct_temp);
                     seqs.push(assign($destruct_temp, init));
@@ -406,7 +406,7 @@ const handlers = {
     },
     TemplateLiteral: function (expr, key, obj) {
         const exprs = expr.expressions;
-        let i = exprs.length;
+        var i = exprs.length;
         iterate(exprs);
         if (!handle_string_template) return;
         if (i === 0) { // `simple string`
@@ -420,10 +420,10 @@ const handlers = {
 
         expr.type = "BinaryExpression";
         expr.operator = '+';
-        let current = expr, last = expr.quasis[i].value;
+        var current = expr, last = expr.quasis[i].value;
 
         while (i--) {
-            let str = expr.quasis[i].value;
+            var str = expr.quasis[i].value;
             str.type = "Literal";
             str.raw = JSON.stringify(str.cooked);
 
@@ -543,13 +543,13 @@ function walkDestruct(pattern, variable, cb) {
 
 function makeGlobalContext() {
     const pseudo_ctx = context;
-    let exporting = false;
+    var exporting = false;
     const variables = new Empty(), exportMap = new Empty(), importMap = new Empty(), imports = [], nsMap = new Empty();
     const global_refs = [];
 
     const temps = [], tempMap = new Empty();
 
-    let has_default = false;
+    var has_default = false;
     const scope = context = {
         _scope: null,
         _variables: variables,
@@ -762,7 +762,7 @@ function handleFunction(obj, is_decl) {
     }
 
     if (defaults && defaults.length) {
-        let i = 0;
+        var i = 0;
         while (!defaults[i]) i++;
         // found first
         const first_default = i;
@@ -895,7 +895,7 @@ module.exports = function (ast, options) {
     for (var obj of ctx.exports()) {
         const local = obj.local;
 
-        let attrs;
+        var attrs;
 
         if (obj.kind === 'const') {
             attrs = [prop('value', local)]
