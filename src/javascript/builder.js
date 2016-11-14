@@ -360,7 +360,7 @@ function onExpr(expr, isStmt) {
             } else {
                 appendStart('{', expr)
             }
-            for (let i = 0, L = expr.properties.length; i < L; i++) {
+            for (var i = 0, L = expr.properties.length; i < L; i++) {
                 i && append(',');
                 let prop = expr.properties[i];
                 if (prop.computed) append('[');
@@ -431,7 +431,7 @@ function onExpr(expr, isStmt) {
             const exprs = expr.expressions,
                 quasis = expr.quasis,
                 L = exprs.length;
-            for (let i = 0; i < L; i++) {
+            for (var i = 0; i < L; i++) {
                 append(quasis[i].value.raw + '${');
                 onExpr(exprs[i]);
                 append('}')
@@ -447,7 +447,7 @@ function onExpr(expr, isStmt) {
 
 function onExprs(arr, isStmt) {
     if (!arr.length) return;
-    for (let i = 0, L = arr.length; i < L; i++) {
+    for (var i = 0, L = arr.length; i < L; i++) {
         let expr = arr[i];
         if (!expr) {
             i && append(', ');
@@ -470,7 +470,7 @@ function onFunction(expr, isShorthand) {
     const hasRest = L && expr.params[L - 1].type === "RestElement";
     if (hasRest) L--;
     const defaults = expr.defaults || [];
-    for (let i = 0; i < L; i++) {
+    for (var i = 0; i < L; i++) {
         i && append(', ');
         onExpr(expr.params[i]);
         if (defaults[i]) {

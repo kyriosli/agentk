@@ -61,7 +61,7 @@ const handlers = {
                 name: '_' + name.substr(slash + 1).replace(/\W/g, '_') + '_' + loc.start.line + '_' + loc.start.column
             };
 
-        for (let specifier of stmt.specifiers) {
+        for (var specifier of stmt.specifiers) {
             switch (specifier.type) {
                 case "ImportNamespaceSpecifier":
                     ns.name = specifier.local.name;
@@ -126,7 +126,7 @@ const handlers = {
         context.onDefaultExport();
     },
     VariableDeclaration: function (stmt) {
-        for (let i = 0, decls = stmt.declarations, L = decls.length; i < L; i++) {
+        for (var i = 0, decls = stmt.declarations, L = decls.length; i < L; i++) {
             const decl = decls[i];
             decl.init && handle('init', decl);
             const id = decl.id;
@@ -191,7 +191,7 @@ const handlers = {
     },
     SwitchStatement: function (stmt) {
         handle('discriminant', stmt);
-        for (let kase of stmt.cases) {
+        for (var kase of stmt.cases) {
             handle('test', kase);
             iterate(kase.consequent)
         }
@@ -358,7 +358,7 @@ const handlers = {
         }
     },
     ObjectExpression: function (expr) {
-        for (let prop of expr.properties) {
+        for (var prop of expr.properties) {
             handle('value', prop)
         }
     },
@@ -452,7 +452,7 @@ const handlers = {
 function handles() {
     const names = arguments, L = names.length;
     return function (expr) {
-        for (let i = 0; i < L; i++) {
+        for (var i = 0; i < L; i++) {
             handle(names[i], expr)
         }
     }
@@ -504,7 +504,7 @@ function makeDestructDummy(param) {
 function walkDestruct(pattern, variable, cb) {
     switch (pattern.type) {
         case "ObjectPattern": // {a:a}
-            for (let prop of pattern.properties) {
+            for (var prop of pattern.properties) {
                 walkDestruct(prop.value, variable && {
                         type: "MemberExpression",
                         object: variable,
@@ -576,7 +576,7 @@ function makeGlobalContext() {
             };
         },
         exportIds: function (ids) {
-            for (let specifier of ids) {
+            for (var specifier of ids) {
                 const exported = specifier.exported.name;
                 if (exported in exportMap) throw new Error(exported + ' has already been exported');
                 specifier.kind = variables[specifier.local.name];
@@ -605,7 +605,7 @@ function makeGlobalContext() {
     return {
         _imports: imports,
         exports: function*() {
-            for (let exported in  exportMap) {
+            for (var exported in  exportMap) {
                 const obj = exportMap[exported], local = obj.local;
                 if (!obj.kind && (obj.kind = variables[local.name]) !== 'var') {
                     if (local.name in importMap) { // exporting imported
@@ -631,7 +631,7 @@ function makeGlobalContext() {
             this.hasDefaultExport = has_default;
             // check for global refs
             if (global_refs.length) {
-                for (let id of global_refs) {
+                for (var id of global_refs) {
                     const name = id.name;
                     if (name in variables) continue;
                     if (name in importMap) {
@@ -683,7 +683,7 @@ function makeScopeContext() {
         dispose: function () {
             // check for global refs
             if (globals.length) {
-                for (let id of globals) {
+                for (var id of globals) {
                     if (id.name in variables && variables[id.name] === 'var') {
                         // found! it's not a global reference
                     } else {
@@ -735,7 +735,7 @@ function handleFunction(obj, is_decl) {
 
     const extra_decls = [];
 
-    for (let i = 0; i < real_paramLen; i++) {
+    for (var i = 0; i < real_paramLen; i++) {
         const param = params[i];
         if (param.type === "Identifier") {
             context.addVariable(param, VarType);
@@ -892,7 +892,7 @@ module.exports = function (ast, options) {
     ) stmts.unshift(useStrict);
 
     const properties = [], exports = [];
-    for (let obj of ctx.exports()) {
+    for (var obj of ctx.exports()) {
         const local = obj.local;
 
         let attrs;
