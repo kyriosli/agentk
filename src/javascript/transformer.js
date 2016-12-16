@@ -67,8 +67,10 @@ const handlers = {
                     ns.name = specifier.local.name;
                     break;
                 case "ImportSpecifier":
-                    context.addImported(specifier.local.name, member(ns, specifier.imported.name));
-                    break;
+                    if (specifier.imported.name !== 'default') {
+                        context.addImported(specifier.local.name, member(ns, specifier.imported.name));
+                        break;
+                    }
                 case "ImportDefaultSpecifier":
                     context.addImported(specifier.local.name, {
                         type: "MemberExpression",
@@ -95,8 +97,21 @@ const handlers = {
             arr[idx] = stmt.declaration;
             ctx.dispose();
         } else { // export {...}
-            context.exportIds(stmt.specifiers);
-            arr[idx] = $empty
+            const specifiers = stmt.specifiers;
+            let default_loc = -1;
+            if (specifiers.some(function (specifier, i) {
+                    if (specifier.exported.name === 'default') {
+                        // export as default
+                        default_loc = i;
+                        return true
+                    }
+                })) {
+                context.onDefaultExport(arr, idx, specifiers[default_loc].local);
+                specifiers.splice(default_loc, 1);
+            } else {
+                arr[idx] = $empty
+            }
+            context.exportIds(specifiers);
         }
     },
     ExportDefaultDeclaration: function (stmt, idx, arr) {
@@ -118,12 +133,8 @@ const handlers = {
                 init = stmt.declaration;
                 break;
         }
-        arr[idx] = expr(call(id('Object.defineProperty'), [
-            $module, $moduleDefault, {
-                type: "ObjectExpression", properties: [
-                    prop('value', init)]
-            }]));
-        context.onDefaultExport();
+
+        context.onDefaultExport(arr, idx, init);
     },
     VariableDeclaration: function (stmt) {
         for (let i = 0, decls = stmt.declarations, L = decls.length; i < L; i++) {
@@ -599,7 +610,14 @@ function makeGlobalContext() {
             tempMap[id.name] = true;
             temps.push(declarator(id, null));
         },
-        onDefaultExport: function () {
+        onDefaultExport: function (arr, idx, init) {
+            const callee = id('Object.defineProperty');
+            callee.loc = arr[idx] && arr[idx].loc;
+            arr[idx] = expr(call(callee, [
+                $module, $moduleDefault, {
+                    type: "ObjectExpression", properties: [
+                        prop('value', init)]
+                }]));
             has_default = true;
         }
     };
