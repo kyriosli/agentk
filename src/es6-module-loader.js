@@ -75,10 +75,10 @@ function includeAsync(name) {
     }
 
     let basename = path.basename(name), supername = path.basename(name.slice(0, -basename.length));
-    if (supername !== 'module') { // file not found
+    if (!process.properties.check || supername !== 'module') { // file not found
         return definedModules[name] = Promise.reject(new Error('ENOENT, no such file or directory \'' + name + '\''));
     }
-    return definedModules[name] = require('./module_server').download(basename).then(function (buffer) {
+    return definedModules[name] = require('./module_server').checkedDownload(basename).then(function (buffer) {
         ensureParentDir(name);
         fs.writeFileSync(name, buffer);
         let module = {};
