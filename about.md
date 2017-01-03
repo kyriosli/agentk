@@ -18,6 +18,7 @@ AgentK 是一个集成了运行环境和开发辅助于一体的`Node.JS`开发�
 ## 示例
 
 如何启动一个HTTP服务
+
 ```js
 import {listen, Response} from 'module/http'
 
@@ -29,6 +30,7 @@ console.log('server started at ' + server.address().port)
 ```
 
 如何处理一个HTTP请求
+
 ```js
 import handler from 'route.js'
 server = listen(8080, handler)
@@ -47,5 +49,3 @@ routes.exact('/', function(request) {
 
 export default routes;
 ```
-
-如何
