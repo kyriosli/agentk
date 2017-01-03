@@ -1,7 +1,19 @@
 <!doctype html>
 <html>
-{% include head.html%}
+{% include head.html %}
 <body>
-{{content}}
+{% include nav.html %}
+
+<div class="wrapper">
+
+    <h1 style="font: normal 88px / 96px consolas, monaco; color: #444">
+        AgentK
+    </h1>
+    <h3 style="color: #888; font-size: 16px; line-height: 20px">
+        高效web开发解决方案
+    </h3>
+
+    {{content}}
+</div>
 </body>
 </html>
